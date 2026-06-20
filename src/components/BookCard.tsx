@@ -211,32 +211,30 @@ export default function BookCard({
         </div>
 
         <div className="flex items-center justify-between pt-3 border-t border-brown-100">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             {renderStars(book.rating)}
-            {book.reviews.length > 0 && (
-              <span className="flex items-center gap-0.5 text-xs text-brown-400">
-                <MessageSquare className="w-3 h-3" />
-                {book.reviews.length}
-              </span>
+            {book.rating === 0 && book.reviews.length === 0 && (
+              <span className="text-xs text-brown-300">暂无评分</span>
             )}
           </div>
-          {book.completedAt && (
-            <span className="text-xs text-brown-400">
-              {formatDate(book.completedAt)} 读完
-            </span>
-          )}
-          {!book.completedAt && book.rating === 0 && book.reviews.length === 0 && (
-            <span className="text-xs text-brown-300">暂无评分</span>
-          )}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onViewDetail(book)}
+              className="flex items-center gap-0.5 text-xs text-brown-400 hover:text-terracotta-500 transition-colors"
+            >
+              <MessageSquare className="w-3 h-3" />
+              {book.reviews.length > 0 ? book.reviews.length : '写书评'}
+            </button>
+            {book.completedAt && (
+              <>
+                <span className="text-brown-200">·</span>
+                <span className="text-xs text-brown-400">
+                  {formatDate(book.completedAt)} 读完
+                </span>
+              </>
+            )}
+          </div>
         </div>
-
-        <button
-          onClick={() => onViewDetail(book)}
-          className="w-full mt-3 py-2 rounded-xl text-sm font-medium flex items-center justify-center gap-1.5 bg-forest-50 text-forest-700 hover:bg-forest-100 active:scale-[0.97] transition-all duration-200"
-        >
-          <MessageSquare className="w-4 h-4" />
-          {book.reviews.length > 0 ? `查看${book.reviews.length}条书评` : '写书评'}
-        </button>
       </div>
     </div>
   );
