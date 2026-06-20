@@ -229,6 +229,14 @@ export default function BookCard({
             <span className="text-xs text-brown-300">暂无评分</span>
           )}
         </div>
+
+        <button
+          onClick={() => onViewDetail(book)}
+          className="w-full mt-3 py-2 rounded-xl text-sm font-medium flex items-center justify-center gap-1.5 bg-forest-50 text-forest-700 hover:bg-forest-100 active:scale-[0.97] transition-all duration-200"
+        >
+          <MessageSquare className="w-4 h-4" />
+          {book.reviews.length > 0 ? `查看${book.reviews.length}条书评` : '写书评'}
+        </button>
       </div>
     </div>
   );
