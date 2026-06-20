@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Edit2, Trash2, Star, BookOpen, Clock, CheckCircle, BookMarked, MoreVertical } from 'lucide-react';
+import { Edit2, Trash2, Star, BookOpen, Clock, CheckCircle, BookMarked, MoreVertical, MessageSquare } from 'lucide-react';
 import type { Book, ReadingStatus } from '@/types';
 import { READING_STATUS_LABELS } from '@/types';
 import { formatDate } from '@/utils/storage';
@@ -10,6 +10,7 @@ interface BookCardProps {
   onEdit: (book: Book) => void;
   onDelete: (id: string, title: string) => void;
   onStatusChange: (id: string, status: ReadingStatus) => void;
+  onViewDetail: (book: Book) => void;
 }
 
 const statusIcons: Record<ReadingStatus, typeof BookOpen> = {
@@ -23,7 +24,8 @@ export default function BookCard({
   index,
   onEdit,
   onDelete,
-  onStatusChange
+  onStatusChange,
+  onViewDetail
 }: BookCardProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [showStatusMenu, setShowStatusMenu] = useState(false);
@@ -118,6 +120,16 @@ export default function BookCard({
               <div className="absolute top-12 right-3 z-20 bg-white rounded-xl shadow-soft-hover border border-brown-100 py-1 min-w-[120px] animate-scale-in">
                 <button
                   onClick={() => {
+                    onViewDetail(book);
+                    setShowMenu(false);
+                  }}
+                  className="w-full px-4 py-2 text-left text-sm text-brown-700 hover:bg-brown-50 flex items-center gap-2 transition-colors"
+                >
+                  <BookMarked className="w-4 h-4" />
+                  查看详情
+                </button>
+                <button
+                  onClick={() => {
                     onEdit(book);
                     setShowMenu(false);
                   }}
@@ -199,13 +211,21 @@ export default function BookCard({
         </div>
 
         <div className="flex items-center justify-between pt-3 border-t border-brown-100">
-          {renderStars(book.rating)}
+          <div className="flex items-center gap-2">
+            {renderStars(book.rating)}
+            {book.reviews.length > 0 && (
+              <span className="flex items-center gap-0.5 text-xs text-brown-400">
+                <MessageSquare className="w-3 h-3" />
+                {book.reviews.length}
+              </span>
+            )}
+          </div>
           {book.completedAt && (
             <span className="text-xs text-brown-400">
               {formatDate(book.completedAt)} 读完
             </span>
           )}
-          {!book.completedAt && book.rating === 0 && (
+          {!book.completedAt && book.rating === 0 && book.reviews.length === 0 && (
             <span className="text-xs text-brown-300">暂无评分</span>
           )}
         </div>

@@ -1,5 +1,18 @@
 export type ReadingStatus = 'unread' | 'reading' | 'completed';
 
+export interface Review {
+  id: string;
+  content: string;
+  rating: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ReviewFormData {
+  content: string;
+  rating: number;
+}
+
 export interface Book {
   id: string;
   title: string;
@@ -9,6 +22,7 @@ export interface Book {
   readingStatus: ReadingStatus;
   rating: number;
   coverImage?: string;
+  reviews: Review[];
   createdAt: string;
   updatedAt: string;
   completedAt?: string;

@@ -6,13 +6,14 @@ import SearchBar from '@/components/SearchBar';
 import BookCard from '@/components/BookCard';
 import Modal from '@/components/Modal';
 import BookForm from '@/components/BookForm';
+import BookDetailModal from '@/components/BookDetailModal';
 
 interface BookListProps {
   onOpenAddModal: () => void;
 }
 
 export default function BookList({ onOpenAddModal }: BookListProps) {
-  const { books, getFilteredBooks, updateBook, deleteBook, getBookById } = useBookStore();
+  const { books, getFilteredBooks, updateBook, deleteBook } = useBookStore();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -22,6 +23,7 @@ export default function BookList({ onOpenAddModal }: BookListProps) {
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deletingBook, setDeletingBook] = useState<{ id: string; title: string } | null>(null);
+  const [detailBookId, setDetailBookId] = useState<string | null>(null);
 
   const filteredBooks = useMemo(
     () => getFilteredBooks(searchQuery, selectedCategory || undefined, selectedStatus || undefined),
@@ -40,6 +42,10 @@ export default function BookList({ onOpenAddModal }: BookListProps) {
 
   const handleStatusChange = (id: string, status: ReadingStatus) => {
     updateBook(id, { readingStatus: status });
+  };
+
+  const handleViewDetail = (book: Book) => {
+    setDetailBookId(book.id);
   };
 
   const confirmDelete = () => {
@@ -89,6 +95,7 @@ export default function BookList({ onOpenAddModal }: BookListProps) {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onStatusChange={handleStatusChange}
+                onViewDetail={handleViewDetail}
               />
             ))}
           </div>
@@ -175,6 +182,14 @@ export default function BookList({ onOpenAddModal }: BookListProps) {
           </div>
         </div>
       </Modal>
+
+      {detailBookId && (
+        <BookDetailModal
+          bookId={detailBookId}
+          isOpen={!!detailBookId}
+          onClose={() => setDetailBookId(null)}
+        />
+      )}
     </div>
   );
 }
